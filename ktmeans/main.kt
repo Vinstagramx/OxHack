@@ -2,11 +2,12 @@ import java.io.File
 import java.awt.image.*
 import javax.imageio.*
 import java.util.TreeSet
+import java.util.PriorityQueue
 import kotlin.random.*
 import kotlin.math.*
 import kotlin.collections.*
 
-val k = 15
+val k = 8
 var clusters = Array(k) {
     mutableListOf<Point>()
 }
@@ -28,8 +29,8 @@ var colours = Array(0) { Point(-1, 0, 0, 0, PointType.COLOUR) }
 
 val input = "input.jpg"
 val km = "kmeans.png"
-val edges = "edgy.png"
-val noGap = "gaps.png"
+val edges = "edge_detection.png"
+val denoise = "noise_reduction.png"
 
 val MAX_DEPTH = 10
 
@@ -51,7 +52,7 @@ fun main(args: Array<String>) {
         )
     }
 
-    blur(1, false)
+    blur(2, false)
 
     var i = 0
     while (!iterate())
@@ -81,14 +82,15 @@ fun main(args: Array<String>) {
     ImageIO.write(clustered, "png", File(edges))
     // EDGES DONE
 
-    gaps(15, PointType.BLACK)
     gaps(15, PointType.WHITE)
+    gaps(100, PointType.BLACK)
+    // gaps(15, PointType.WHITE)
     colours.forEach {
         val x = it.id % w
         val y = it.id / w
         clustered.setRGB(x, y, convert(it))
     }
-    ImageIO.write(clustered, "png", File(noGap))
+    ImageIO.write(clustered, "png", File(denoise))
 }
 
 fun gaps(t: Int, rm: PointType) {
@@ -97,11 +99,34 @@ fun gaps(t: Int, rm: PointType) {
     checked = sortedSetOf<Int>()
     colours.indices.forEach {
         if (!(it in checked)) {
-            val x = it % w
-            val y = it / w
             val r = Region(id, 0, sortedSetOf<Int>(), colours[it].t)
             regions.add(r)
-            recursiveTraverse(x, y, r, 0)
+            val queue = PriorityQueue<Int>()
+            queue.add(it)
+            while (queue.size > 0) {
+                val front = queue.poll()!!
+                val x = front % w
+                val y = front / w
+                if (!(front in checked)) {
+                    if (colours[front].t == r.t) {
+                        checked.add(front)
+                        r.pixels.add(front)
+                        r.size++
+                        ((x - 1)..(x + 1)).forEach { i ->
+                            ((y - 1)..(y + 1)).forEach { j ->
+                                val flag = when {
+                                    i >= w -> false
+                                    i < 0 -> false
+                                    j >= h -> false
+                                    j < 0 -> false
+                                    else -> true
+                                }
+                                if (flag) queue.add(j * w + i)
+                            }
+                        }
+                    }
+                }
+            }
             id++
         }
     }
@@ -109,41 +134,21 @@ fun gaps(t: Int, rm: PointType) {
         if (r.size < t) {
             r.pixels.forEach {
                 colours[it] = when {
-                    // r.t == PointType.WHITE && rm == r.t -> Point(it, 0, 0, 0, PointType.BLACK)
-                    // r.t == PointType.BLACK && rm == r.t -> Point(it, 0, 0, 0, PointType.WHITE)
-                    else -> Point(it, 255, 0, 0, PointType.COLOUR)
+                    r.t == PointType.WHITE && rm == r.t -> Point(it, 0, 0, 0, PointType.BLACK)
+                    r.t == PointType.BLACK && rm == r.t -> Point(it, 255, 255, 255, PointType.WHITE)
+                    else -> colours[it]
                 }
             }
         }
     }
-}
-
-fun recursiveTraverse(x: Int, y: Int, r: Region, d: Int) {
-    if (d > MAX_DEPTH) {
-        // println("MAX_DEPTH REACHED! ${r.id}")
-        return
-    }
-
-    val id = y * w + x
-    if (!(id in checked)) {
-        checked.add(id)
-        if (colours[id].t == r.t) {
-            r.pixels.add(id)
-            r.size++
-            ((x - 1)..(x + 1)).forEach { i ->
-                ((y - 1)..(y + 1)).forEach { j ->
-                    val flag = when {
-                        i >= w -> false
-                        i < 0 -> false
-                        j >= h -> false
-                        j < 0 -> false
-                        else -> true
-                    }
-                    if (flag) recursiveTraverse(i, j, r, d + 1)
-                }
-            }
-        }
-    }
+    // regions.forEach { reg ->
+    //     val r = Random.nextInt(0, 256)
+    //     val g = Random.nextInt(0, 256)
+    //     val b = Random.nextInt(0, 256)
+    //     reg.pixels.forEach {
+    //         colours[it] = Point(it, r, g, b, PointType.COLOUR)
+    //     }
+    // }
 }
 
 fun blur(r: Int, weighted: Boolean) {
