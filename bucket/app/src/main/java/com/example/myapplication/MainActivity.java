@@ -40,9 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void toastMe(View view) {
         // Toast myToast = Toast.makeText(this, message, duration);
-        Toast myToast = Toast.makeText(this, "big wanker",
-                Toast.LENGTH_SHORT);
-        myToast.show();
+//        Toast myToast = Toast.makeText(this, "big wanker",
+//                Toast.LENGTH_SHORT);
+//        myToast.show();
+        Intent activity2 = new Intent(this, Activity2.class);
+        startActivity(activity2);
     }
 
     public void loadImage(View view) {
