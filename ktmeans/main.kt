@@ -89,13 +89,13 @@ fun main(args: Array<String>) {
 
     gaps(whiteReduction, PointType.WHITE)
     gaps(blackReduction, PointType.BLACK)
-    // gaps(15, PointType.WHITE)
     colours.forEach {
         val x = it.id % w
         val y = it.id / w
         clustered.setRGB(x, y, convert(it))
     }
     ImageIO.write(clustered, "png", File(denoise))
+    // GAPS REMOVED
 }
 
 fun gaps(t: Int, rm: PointType) {
@@ -146,14 +146,6 @@ fun gaps(t: Int, rm: PointType) {
             }
         }
     }
-    // regions.forEach { reg ->
-    //     val r = Random.nextInt(0, 256)
-    //     val g = Random.nextInt(0, 256)
-    //     val b = Random.nextInt(0, 256)
-    //     reg.pixels.forEach {
-    //         colours[it] = Point(it, r, g, b, PointType.COLOUR)
-    //     }
-    // }
 }
 
 fun blur(r: Int, weighted: Boolean) {
@@ -210,7 +202,7 @@ fun edge() {
                 })
             }
         }
-        if (surrounding.filterNotNull().filter { s -> !((s.r == it.r) and (s.g == it.g) and (s.b == it.b)) }.size < 2) {
+        if (surrounding.filterNotNull().filter { s -> !((s.r == it.r) && (s.g == it.g) && (s.b == it.b)) }.size < 1) {
             Point(it.id, 255, 255, 255, PointType.WHITE)
         } else {
             Point(it.id, 0, 0, 0, PointType.BLACK)
