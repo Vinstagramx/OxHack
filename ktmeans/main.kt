@@ -7,7 +7,14 @@ import kotlin.random.*
 import kotlin.math.*
 import kotlin.collections.*
 
-val k = 8
+// figure out a way to dynamically set these values?
+
+var k = 5
+var whiteReduction = 15
+var blackReduction = 150
+var initialBlur = 1
+var secondBlur = 1
+
 var clusters = Array(k) {
     mutableListOf<Point>()
 }
@@ -32,8 +39,6 @@ val km = "kmeans.png"
 val edges = "edge_detection.png"
 val denoise = "noise_reduction.png"
 
-val MAX_DEPTH = 10
-
 // consider each point as a r3 vector
 fun main(args: Array<String>) {
     val img = ImageIO.read(File(input))
@@ -52,7 +57,7 @@ fun main(args: Array<String>) {
         )
     }
 
-    blur(2, false)
+    blur(initialBlur, false)
 
     var i = 0
     while (!iterate())
@@ -72,7 +77,7 @@ fun main(args: Array<String>) {
     ImageIO.write(clustered, "png", File(km))
     // KMEANS DONE
 
-    blur(1, false)
+    blur(secondBlur, false)
     edge()
     colours.forEach {
         val x = it.id % w
@@ -82,8 +87,8 @@ fun main(args: Array<String>) {
     ImageIO.write(clustered, "png", File(edges))
     // EDGES DONE
 
-    gaps(15, PointType.WHITE)
-    gaps(100, PointType.BLACK)
+    gaps(whiteReduction, PointType.WHITE)
+    gaps(blackReduction, PointType.BLACK)
     // gaps(15, PointType.WHITE)
     colours.forEach {
         val x = it.id % w
