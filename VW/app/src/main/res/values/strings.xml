@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="main_text">Upload an image by clicking the \'Settings\' button!
+    <string name="main_text">Upload an image by clicking the \'Upload\' button!
         \n Use the \'Colour\' button to change the fill colour.
         \n Click the \'Save\' button to save your image.</string>
 </resources>

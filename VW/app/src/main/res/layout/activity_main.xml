@@ -37,10 +37,10 @@
         tools:ignore="RtlCompat" />
 
     <Button
-        android:id="@+id/home"
+        android:id="@+id/Save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Home"
+        android:text="Save"
         android:background="@color/buttonBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/colour"
