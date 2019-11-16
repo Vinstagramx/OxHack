@@ -13,9 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -23,19 +25,31 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.os.Bundle;
 
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.larswerkman.holocolorpicker.OpacityBar;
+import com.larswerkman.holocolorpicker.SVBar;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     //private static int RESULT_LOAD_IMAGE = 1;
     RelativeLayout rl;
+    private ColorPicker picker;
     public ImageView image_view;
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        picker = (ColorPicker) findViewById(R.id.picker);
+        SVBar svBar = (SVBar) findViewById(R.id.svbar);
+        picker.addSVBar(svBar);
+        picker.setShowOldCenterColor(false); //this line causes error
     }
 
     public void toastMe(View view) {
