@@ -1,28 +1,40 @@
 import java.io.File
 import java.awt.image.*
 import javax.imageio.*
+import java.util.TreeSet
 import kotlin.random.*
+import kotlin.math.*
+import kotlin.collections.*
 
-val k = 10
+val k = 15
 var clusters = Array(k) {
     mutableListOf<Point>()
 }
-val centroids = Array(k) {
+var centroids = Array(k) {
     Point(
         it,
         Random.nextInt(0, 256),
         Random.nextInt(0, 256),
-        Random.nextInt(0, 256)
+        Random.nextInt(0, 256),
+        PointType.CENTROID
     )
 }
+var regions = mutableListOf<Region>()
+var checked = sortedSetOf<Int>()
+
 var w = 0
 var h = 0
-var colours = Array(0) { Point(-1, 0, 0, 0) }
+var colours = Array(0) { Point(-1, 0, 0, 0, PointType.COLOUR) }
+
+val input = "input.jpg"
+val km = "kmeans.png"
+val edges = "edgy.png"
+val noGap = "gaps.png"
+
+val MAX_DEPTH = 10
 
 // consider each point as a r3 vector
 fun main(args: Array<String>) {
-    val input = "img.jpeg"
-    val output = "out.png"
     val img = ImageIO.read(File(input))
     w = img.getWidth()
     h = img.getHeight()
@@ -34,9 +46,13 @@ fun main(args: Array<String>) {
             it,
             (argb ushr (2 * 8)) and 0x000000FF,
             (argb ushr (1 * 8)) and 0x000000FF,
-            (argb ushr (0 * 8)) and 0x000000FF
+            (argb ushr (0 * 8)) and 0x000000FF,
+            PointType.COLOUR
         )
     }
+
+    blur(1, false)
+
     var i = 0
     while (!iterate())
     {
@@ -48,14 +64,155 @@ fun main(args: Array<String>) {
         clusters[centroid.id].forEach {
             val x = it.id % w
             val y = it.id / w
+            colours[it.id] = Point(it.id, centroid.r, centroid.g, centroid.b, PointType.COLOUR)
             clustered.setRGB(x, y, conv)
         }
     }
-    ImageIO.write(clustered, "png", File(output))
-    println("written?")
+    ImageIO.write(clustered, "png", File(km))
+    // KMEANS DONE
+
+    blur(1, false)
+    edge()
+    colours.forEach {
+        val x = it.id % w
+        val y = it.id / w
+        clustered.setRGB(x, y, convert(it))
+    }
+    ImageIO.write(clustered, "png", File(edges))
+    // EDGES DONE
+
+    gaps(15, PointType.BLACK)
+    gaps(15, PointType.WHITE)
+    colours.forEach {
+        val x = it.id % w
+        val y = it.id / w
+        clustered.setRGB(x, y, convert(it))
+    }
+    ImageIO.write(clustered, "png", File(noGap))
+}
+
+fun gaps(t: Int, rm: PointType) {
+    var id = 0
+    regions = mutableListOf<Region>()
+    checked = sortedSetOf<Int>()
+    colours.indices.forEach {
+        if (!(it in checked)) {
+            val x = it % w
+            val y = it / w
+            val r = Region(id, 0, sortedSetOf<Int>(), colours[it].t)
+            regions.add(r)
+            recursiveTraverse(x, y, r, 0)
+            id++
+        }
+    }
+    regions.forEach { r ->
+        if (r.size < t) {
+            r.pixels.forEach {
+                colours[it] = when {
+                    // r.t == PointType.WHITE && rm == r.t -> Point(it, 0, 0, 0, PointType.BLACK)
+                    // r.t == PointType.BLACK && rm == r.t -> Point(it, 0, 0, 0, PointType.WHITE)
+                    else -> Point(it, 255, 0, 0, PointType.COLOUR)
+                }
+            }
+        }
+    }
+}
+
+fun recursiveTraverse(x: Int, y: Int, r: Region, d: Int) {
+    if (d > MAX_DEPTH) {
+        // println("MAX_DEPTH REACHED! ${r.id}")
+        return
+    }
+
+    val id = y * w + x
+    if (!(id in checked)) {
+        checked.add(id)
+        if (colours[id].t == r.t) {
+            r.pixels.add(id)
+            r.size++
+            ((x - 1)..(x + 1)).forEach { i ->
+                ((y - 1)..(y + 1)).forEach { j ->
+                    val flag = when {
+                        i >= w -> false
+                        i < 0 -> false
+                        j >= h -> false
+                        j < 0 -> false
+                        else -> true
+                    }
+                    if (flag) recursiveTraverse(i, j, r, d + 1)
+                }
+            }
+        }
+    }
+}
+
+fun blur(r: Int, weighted: Boolean) {
+    val temp = colours.map {
+        val x = it.id % w
+        val y = it.id / w
+        val dummy = Point(it.id, 0, 0, 0, PointType.COLOUR)
+        var divisor = 0
+        ((x - r)..(x + r)).forEach { i ->
+            ((y - r)..(y + r)).forEach { j ->
+                val weight = when {
+                    weighted -> 1 + r - arrayOf(i - x, j - y).map { abs(it) }.max()!!
+                    else -> 1
+                }
+                var flag = when {
+                    i >= w -> false
+                    i < 0 -> false
+                    j >= h -> false
+                    j < 0 -> false
+                    else -> true
+                }
+                if (flag) {
+                    divisor += weight
+                    val c = colours[j * w + i]
+                    dummy.r += weight * c.r
+                    dummy.g += weight * c.g
+                    dummy.b += weight * c.b
+                }
+            }
+        }
+        dummy.r /= divisor
+        dummy.g /= divisor
+        dummy.b /= divisor
+        dummy
+    }
+    temp.indices.forEach {
+        colours[it] = temp[it]
+    }
+}
+
+fun edge() {
+    val temp = colours.map {
+        val x = it.id % w
+        val y = it.id / w
+        val surrounding = mutableListOf<Point?>()
+        ((x - 1)..(x + 1)).forEach { i ->
+            ((y - 1)..(y + 1)).forEach { j ->
+                surrounding.add(when {
+                    i >= w -> null
+                    i < 0 -> null
+                    j >= h -> null
+                    j < 0 -> null
+                    else -> colours[j * w + i]
+                })
+            }
+        }
+        if (surrounding.filterNotNull().filter { s -> !((s.r == it.r) and (s.g == it.g) and (s.b == it.b)) }.size < 2) {
+            Point(it.id, 255, 255, 255, PointType.WHITE)
+        } else {
+            Point(it.id, 0, 0, 0, PointType.BLACK)
+        }
+    }
+    temp.indices.forEach {
+        colours[it] = temp[it]
+    }
 }
 
 fun convert(p: Point): Int {
+    // kotlin has 0xFF000000 as long
     return -16777216 or (p.r shl (2 * 8)) or (p.g shl (1 * 8)) or (p.b shl (0 * 8))
 }
 
@@ -68,19 +225,24 @@ fun iterate(): Boolean {
                 it,
                 clusters[it].map { it.r }.sum() / length,
                 clusters[it].map { it.g }.sum() / length,
-                clusters[it].map { it.b }.sum() / length
+                clusters[it].map { it.b }.sum() / length,
+                PointType.CENTROID
             )
         }
     }
+
     // clustering
     val newClusters = Array(k) { mutableListOf<Point>() }
     colours.forEach { c ->
         val dists = centroids.map { dist(c, it) }
         newClusters[dists.indexOf(dists.min())].add(c)
     }
+
+    // checking for changes
     if ((0..(k - 1)).all { newClusters[it] == clusters[it] }) {
         return true
     }
+
     clusters = newClusters
     return false
 }
@@ -93,5 +255,20 @@ data class Point(
     var id: Int,
     var r: Int,
     var g: Int,
-    var b: Int
+    var b: Int,
+    var t: PointType
 )
+
+data class Region(
+    var id: Int,
+    var size: Int,
+    var pixels: TreeSet<Int>,
+    var t: PointType
+)
+
+enum class PointType {
+    COLOUR,
+    BLACK,
+    WHITE,
+    CENTROID
+}
