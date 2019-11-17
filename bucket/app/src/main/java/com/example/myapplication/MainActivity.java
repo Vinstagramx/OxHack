@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 image_view = findViewById(R.id.imageView1);
                 //g.blur(1, false);
                 g.kmeans(5);
-                //g.blur(1, false);
+                g.blur(1, false);
                 g.edge(1);
                 g.fixGaps(15, PointType.WHITE);
                 g.fixGaps(150, PointType.BLACK);

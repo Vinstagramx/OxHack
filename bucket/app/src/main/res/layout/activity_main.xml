@@ -27,12 +27,12 @@
 
     <Button
         android:id="@+id/colour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_marginStart="8dp"
         android:text="Colour"
         android:onClick="toastMe"
-        android:background="@color/buttonBackground"
+        android:background="@drawable/round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
@@ -42,10 +42,10 @@
 
     <Button
         android:id="@+id/Load"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:text="Load"
-        android:background="@color/buttonBackground"
+        android:background="@drawable/round"
         android:onClick="loadImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/colour"
@@ -54,11 +54,11 @@
 
     <Button
         android:id="@+id/upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_marginEnd="8dp"
         android:text="Upload"
-        android:background="@color/buttonBackground"
+        android:background="@drawable/round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
