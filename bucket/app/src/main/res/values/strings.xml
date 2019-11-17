@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="main_text">Upload an image by clicking the \'Settings\' button!
-        \n Use the \'Colour\' button to change the fill colour.
-        \n Click the \'Save\' button to save your image.</string>
+    <string name="main_text">An app designed to fill any spare time.</string>
+    <string name="help1">Upload an image by clicking the \'Gallery\' icon!</string>
+    <string name="help2">Use the colour palette to change the fill colour.</string>
+    <string name="help3">Click the \'Save\' button to save your image.</string>
     <string name="colorselect">Select your colour:</string>
 </resources>

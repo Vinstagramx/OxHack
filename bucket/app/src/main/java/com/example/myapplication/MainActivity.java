@@ -47,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(activity2);
     }
 
+    public void yeet(View view) {
+        Intent activity3 = new Intent(this, Activity3.class);
+        startActivity(activity3);
+    }
+
     public void loadImage(View view) {
 
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
