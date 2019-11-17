@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
     println("Points clustered in [${t1 - t0}ms]")
 
     generator.blur(1, false)
-    generator.edge(1)
+    generator.edge()
     generator.write("edge_detection", "png")
     val t2 = System.currentTimeMillis()
 
@@ -141,8 +141,16 @@ class ImageGenerator {
             // clustering
             val newClusters = Array(k) { mutableListOf<Point>() }
             colours.forEach { c ->
-                val dists = centroids.map { dist(c, it) }
-                newClusters[dists.indexOf(dists.min())].add(c)
+                var index = -1
+                var min = 2147483647
+                centroids.indices.forEach {
+                    val distance = dist(c, centroids[it])
+                    if (distance < min) {
+                        min = distance
+                        index = it
+                    }
+                }
+                newClusters[index].add(c)
             }
 
             // checking for changes
@@ -157,7 +165,7 @@ class ImageGenerator {
         }
     }
 
-    fun edge(tolerance: Int) {
+    fun edge() {
         val temp = colours.map {
             val x = it.id % w
             val y = it.id / w
@@ -170,12 +178,10 @@ class ImageGenerator {
                     })
                 }
             }
-            if (surrounding.filterNotNull().filter { s ->
-                !((s.r == it.r) && (s.g == it.g) && (s.b == it.b))
-            }.size < tolerance) {
-                Point(it.id, 255, 255, 255, PointType.WHITE)
-            } else {
+            if (surrounding.filterNotNull().any { s -> !((s.r == it.r) && (s.g == it.g) && (s.b == it.b)) }) {
                 Point(it.id, 0, 0, 0, PointType.BLACK)
+            } else {
+                Point(it.id, 255, 255, 255, PointType.WHITE)
             }
         }
         temp.indices.forEach {
