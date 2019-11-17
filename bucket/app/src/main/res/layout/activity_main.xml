@@ -13,6 +13,24 @@
     android:background="@color/screenBackground"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/Upload"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginBottom="42dp"
+        android:background="@drawable/round"
+        android:onClick="loadImage"
+        android:text="Upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/Upload"
+        app:layout_constraintStart_toEndOf="@+id/colour"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -30,38 +48,49 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginStart="8dp"
-        android:text="Colour"
-        android:onClick="toastMe"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="280dp"
+        android:layout_marginRight="280dp"
         android:background="@drawable/round"
+        android:onClick="toastMe"
+        android:text="Colour"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.493"
         tools:ignore="RtlCompat" />
 
     <Button
-        android:id="@+id/Load"
+        android:id="@+id/Info"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:text="Load"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="42dp"
         android:background="@drawable/round"
         android:onClick="loadImage"
+        android:text="Info"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/colour"
-        app:layout_constraintStart_toEndOf="@+id/upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Upload"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/upload"
+        android:id="@+id/Upload"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginEnd="8dp"
-        android:text="Upload"
+        android:layout_marginEnd="96dp"
+        android:layout_marginRight="96dp"
         android:background="@drawable/round"
+        android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.493"
         tools:ignore="RtlCompat" />
 
     <ImageView

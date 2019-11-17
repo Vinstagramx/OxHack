@@ -671,10 +671,11 @@ drawable tooltip_frame_light
 id ALT
 id CTRL
 id FUNCTION
-id Load
+id Info
 id META
 id SHIFT
 id SYM
+id Upload
 id accessibility_action_clickable_span
 id accessibility_custom_action_0
 id accessibility_custom_action_1
@@ -858,7 +859,6 @@ id top
 id topPanel
 id uniform
 id up
-id upload
 id useLogo
 id withText
 id wrap
