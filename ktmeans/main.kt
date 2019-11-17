@@ -42,11 +42,15 @@ class ImageGenerator {
     var w: Int
     var h: Int
     var colours: Array<Point>
+    var regions: MutableList<Region>
+    var checked: TreeSet<Int>
 
     init {
         w = 0
         h = 0
         colours = Array(0) { Point(-1, 0, 0, 0, PointType.COLOUR) }
+        regions = mutableListOf<Region>()
+        checked = sortedSetOf<Int>()
     }
 
     constructor() {
@@ -190,42 +194,71 @@ class ImageGenerator {
     }
 
     fun fixGaps(t: Int, rm: PointType) {
+        println("t: $t, rm: $rm ssss")
         var id = 0
-        val regions = mutableListOf<Region>()
-        val checked = sortedSetOf<Int>()
+        regions = mutableListOf<Region>()
+        checked = sortedSetOf<Int>()
         colours.indices.forEach {
             if (!(it in checked)) {
-                val r = Region(id, 0, sortedSetOf<Int>(), colours[it].t)
-                regions.add(r)
+                println(id)
                 val queue = PriorityQueue<Int>()
+                val r = Region(id, 0, sortedSetOf<Int>(), colours[it].t)
                 queue.add(it)
+                regions.add(r)
                 while (queue.size > 0) {
-                    val front = queue.poll()!!
-                    val x = front % w
-                    val y = front / w
-                    if (!(front in checked)) {
-                        if (colours[front].t == r.t) {
-                            checked.add(front)
-                            r.pixels.add(front)
-                            r.size++
-                            ((x - 1)..(x + 1)).forEach { i ->
-                                ((y - 1)..(y + 1)).forEach { j ->
-                                    if (i >= 0 && i < w && j >= 0 && j < h) {
-                                        queue.add(j * w + i)
+                    val q = queue.poll()
+                    if (q >= 0 && !(q in checked)) {
+                        val x = q % w
+                        val y = q / w
+                        arrayListOf(0, 1, -1).forEach { o ->
+                            var i = x
+                            while (i < w && i >= 0 && (y + o) >= 0 && (y + o) < h && colours[w * (y + o) + i].t == r.t) {
+                                when (o) {
+                                    0 -> {
+                                        checked.add(w * y + i)
+                                        r.pixels.add(w * y + i)
                                     }
+                                    else -> queue.add(w * (y + o) + i)
                                 }
+                                i++
+                            }
+
+                            i = x - 1
+                            while (i < w && i >= 0 && (y + o) >= 0 && (y + o) < h && colours[w * (y + o) + i].t == r.t) {
+                                when (o) {
+                                    0 -> {
+                                        checked.add(w * y + i)
+                                        r.pixels.add(w * y + i)
+                                    }
+                                    else -> queue.add(w * (y + o) + i)
+                                }
+                                i--
                             }
                         }
                     }
                 }
-                id++
             }
+            id++
         }
+        // regions.forEach { r ->
+        //     val red = Random.nextInt(0, 256)
+        //     val grn = Random.nextInt(0, 256)
+        //     val blu = Random.nextInt(0, 256)
+        //     if (r.size < 10000)
+        //     {
+        //         println(r.pixels.size)
+        //         r.pixels.forEach {
+        //             println("${r.t}: ${colours[it].t}")
+        //             colours[it] = Point(it, red, grn, blu, PointType.COLOUR)
+        //         }
+        //     }
+        // }
         regions.forEach { r ->
+            // println(r.size)
             if (r.size < t) {
                 r.pixels.forEach {
                     colours[it] = when {
-                        r.t == PointType.WHITE && rm == r.t ->Point(it, 0, 0, 0, PointType.BLACK)
+                        r.t == PointType.WHITE && rm == r.t -> Point(it, 0, 0, 0, PointType.BLACK)
                         r.t == PointType.BLACK && rm == r.t -> Point(it, 255, 255, 255, PointType.WHITE)
                         else -> colours[it]
                     }
