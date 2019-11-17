@@ -275,6 +275,16 @@
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material">20sp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
+    <dimen name="bar_length">240dp</dimen>
+    <dimen name="bar_pointer_halo_radius">14dp</dimen>
+    <dimen name="bar_pointer_radius">6dp</dimen>
+    <dimen name="bar_thickness">4dp</dimen>
+    <dimen name="color_center_halo_radius">60dp</dimen>
+    <dimen name="color_center_radius">54dp</dimen>
+    <dimen name="color_pointer_halo_radius">18dp</dimen>
+    <dimen name="color_pointer_radius">14dp</dimen>
+    <dimen name="color_wheel_radius">124dp</dimen>
+    <dimen name="color_wheel_thickness">8dp</dimen>
     <dimen name="compat_button_inset_horizontal_material">4dp</dimen>
     <dimen name="compat_button_inset_vertical_material">6dp</dimen>
     <dimen name="compat_button_padding_horizontal_material">8dp</dimen>
@@ -316,6 +326,39 @@
     <dimen name="tooltip_y_offset_touch">16dp</dimen>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
     <drawable name="notification_template_icon_low_bg">#0cffffff</drawable>
+    <item name="accessibility_action_clickable_span" type="id"/>
+    <item name="accessibility_custom_action_0" type="id"/>
+    <item name="accessibility_custom_action_1" type="id"/>
+    <item name="accessibility_custom_action_10" type="id"/>
+    <item name="accessibility_custom_action_11" type="id"/>
+    <item name="accessibility_custom_action_12" type="id"/>
+    <item name="accessibility_custom_action_13" type="id"/>
+    <item name="accessibility_custom_action_14" type="id"/>
+    <item name="accessibility_custom_action_15" type="id"/>
+    <item name="accessibility_custom_action_16" type="id"/>
+    <item name="accessibility_custom_action_17" type="id"/>
+    <item name="accessibility_custom_action_18" type="id"/>
+    <item name="accessibility_custom_action_19" type="id"/>
+    <item name="accessibility_custom_action_2" type="id"/>
+    <item name="accessibility_custom_action_20" type="id"/>
+    <item name="accessibility_custom_action_21" type="id"/>
+    <item name="accessibility_custom_action_22" type="id"/>
+    <item name="accessibility_custom_action_23" type="id"/>
+    <item name="accessibility_custom_action_24" type="id"/>
+    <item name="accessibility_custom_action_25" type="id"/>
+    <item name="accessibility_custom_action_26" type="id"/>
+    <item name="accessibility_custom_action_27" type="id"/>
+    <item name="accessibility_custom_action_28" type="id"/>
+    <item name="accessibility_custom_action_29" type="id"/>
+    <item name="accessibility_custom_action_3" type="id"/>
+    <item name="accessibility_custom_action_30" type="id"/>
+    <item name="accessibility_custom_action_31" type="id"/>
+    <item name="accessibility_custom_action_4" type="id"/>
+    <item name="accessibility_custom_action_5" type="id"/>
+    <item name="accessibility_custom_action_6" type="id"/>
+    <item name="accessibility_custom_action_7" type="id"/>
+    <item name="accessibility_custom_action_8" type="id"/>
+    <item name="accessibility_custom_action_9" type="id"/>
     <item name="action_bar_activity_content" type="id"/>
     <item name="action_bar_spinner" type="id"/>
     <item name="action_menu_divider" type="id"/>
@@ -326,6 +369,11 @@
     <item name="progress_circular" type="id"/>
     <item name="progress_horizontal" type="id"/>
     <item name="split_action_bar" type="id"/>
+    <item name="tag_accessibility_actions" type="id"/>
+    <item name="tag_accessibility_clickable_spans" type="id"/>
+    <item name="tag_accessibility_heading" type="id"/>
+    <item name="tag_accessibility_pane_title" type="id"/>
+    <item name="tag_screen_reader_focusable" type="id"/>
     <item name="tag_transition_group" type="id"/>
     <item name="tag_unhandled_key_event_manager" type="id"/>
     <item name="tag_unhandled_key_listeners" type="id"/>
@@ -378,6 +426,7 @@
     <string name="abc_shareactionprovider_share_with_application">Share with <ns1:g example="Mail" id="application_name">%s</ns1:g></string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
     <string name="app_name">My Application</string>
+    <string name="colorselect">Select your colour:</string>
     <string name="main_text">Upload an image by clicking the \'Settings\' button!
         \n Use the \'Colour\' button to change the fill colour.
         \n Click the \'Save\' button to save your image.</string>
@@ -388,7 +437,7 @@
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>
     <style name="Animation.AppCompat.DropDownUp" parent="Base.Animation.AppCompat.DropDownUp"/>
     <style name="Animation.AppCompat.Tooltip" parent="Base.Animation.AppCompat.Tooltip"/>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -2516,6 +2565,8 @@
              enough space to lay them out side-by-side. -->
         <attr format="boolean" name="allowStacking"/>
     </declare-styleable>
+    <declare-styleable name="ColorBars"><attr format="dimension" name="bar_thickness"/><attr format="dimension" name="bar_length"/><attr format="dimension" name="bar_pointer_radius"/><attr format="dimension" name="bar_pointer_halo_radius"/><attr format="boolean" name="bar_orientation_horizontal"/></declare-styleable>
+    <declare-styleable name="ColorPicker"><attr format="dimension" name="color_wheel_radius"/><attr format="dimension" name="color_wheel_thickness"/><attr format="dimension" name="color_center_radius"/><attr format="dimension" name="color_center_halo_radius"/><attr format="dimension" name="color_pointer_radius"/><attr format="dimension" name="color_pointer_halo_radius"/></declare-styleable>
     <declare-styleable name="ColorStateListItem">
         <!-- Base color for this state. -->
         <attr name="android:color"/>

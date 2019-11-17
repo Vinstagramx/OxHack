@@ -8,6 +8,7 @@
     android:layout_marginStart="24dp"
     android:layout_marginEnd="24dp"
     android:textSize="72sp"
+
     app:layout_constraintVertical_bias="0.3"
     android:background="@color/screenBackground"
     tools:context=".MainActivity">
@@ -18,9 +19,11 @@
         android:layout_height="wrap_content"
         android:text="@string/main_text"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.766" />
 
     <Button
         android:id="@+id/colour"
@@ -60,18 +63,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:ignore="RtlCompat" />
+
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher_foreground" />
-    <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <com.larswerkman.holocolorpicker.SVBar
-        android:id="@+id/svbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="321dp"
+        android:layout_height="454dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+
+        android:src="@drawable/ic_launcher_foreground"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
