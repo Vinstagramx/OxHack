@@ -13,7 +13,7 @@
     android:background="@color/screenBackground"
     tools:context=".MainActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/Upload"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -25,7 +25,9 @@
         android:layout_marginBottom="42dp"
         android:background="@drawable/round"
         android:onClick="loadImage"
-        android:text="Upload"
+        android:src="@drawable/gallery"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/Upload"
         app:layout_constraintStart_toEndOf="@+id/colour"
@@ -43,7 +45,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.766" />
 
-    <Button
+    <ImageButton
         android:id="@+id/colour"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -53,7 +55,9 @@
         android:layout_marginRight="280dp"
         android:background="@drawable/round"
         android:onClick="toastMe"
-        android:text="Colour"
+        android:src="@drawable/pallete"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +65,7 @@
         app:layout_constraintVertical_bias="0.493"
         tools:ignore="RtlCompat" />
 
-    <Button
+    <ImageButton
         android:id="@+id/Info"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -73,20 +77,24 @@
         android:layout_marginBottom="42dp"
         android:background="@drawable/round"
         android:onClick="loadImage"
-        android:text="Info"
+        android:src="@drawable/info"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/Upload"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/Upload"
+    <ImageButton
+        android:id="@+id/Save"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginEnd="96dp"
         android:layout_marginRight="96dp"
         android:background="@drawable/round"
-        android:text="Save"
+        android:src="@drawable/save"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
