@@ -1,4 +1,0 @@
-#Sun Nov 17 01:12:24 GMT 2019
-base.0=/Users/vwong/Documents/GitHub/OxHack/bucket/app/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
