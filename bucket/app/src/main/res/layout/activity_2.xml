@@ -16,7 +16,7 @@
         android:layout_marginEnd="147dp"
         android:layout_marginRight="147dp"
         android:layout_marginBottom="636dp"
-        android:text="@string/colorselect"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -50,6 +50,19 @@
         android:layout_marginBottom="246dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/picker" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="94dp"
+        android:layout_height="48dp"
+        android:background="#ffffff"
+        android:onClick="back"
+        android:text="Select"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/picker" />
 </androidx.constraintlayout.widget.ConstraintLayout>

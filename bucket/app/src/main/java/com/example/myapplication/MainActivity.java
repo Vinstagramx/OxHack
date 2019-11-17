@@ -4,13 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import java.lang.Integer;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -30,12 +37,52 @@ public class MainActivity extends AppCompatActivity {
     //private static int RESULT_LOAD_IMAGE = 1;
     RelativeLayout rl;
     public ImageView image_view;
+    public static Integer c = Color.argb(255, 255,0,0);
+    private static boolean first = true;
+    private static Bitmap img;
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
 
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        image_view = findViewById(R.id.imageView1);
+        if (first) {
+            first = false;
+        } else {
+            image_view.setImageBitmap(img);
+        }
+        image_view.setOnTouchListener( new ImageView.OnTouchListener(){
+            //ImageView.setOnTouchListener handleTouch = new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View imageView1, MotionEvent event){
+                Intent i = getIntent();
+                final Point p1 = new Point();
+                //p1.x = (int)event.getX() *(getScreenWidth() /image_view.getWidth() ); //x co-ordinate where the user touches on the screen
+                //p1.y = (int)event.getY()*(getScreenHeight()/ image_view.getHeight());
+                /*if (img != null) {
+                    p1.x *= (image_view.getWidth() / img.getWidth());
+                    p1.y *= (image_view.getHeight() / img.getHeight());
+                }*/
+                p1.x = (int)event.getX(); //x co-ordinate where the user touches on the screen
+                p1.y = (int)event.getY();
+//                img = image_view.getDrawingCache();
+                Log.i("TOUCH EVENT", "x:" + p1.x + ",y:" + p1.y);
+                //Bitmap bitmap = findViewById(R.id.imageView1).getDrawingCache();
+                Integer targetColor = Color.argb(255, 255, 255, 255);
+                fill f = new fill(); // TODO port scanline from kt
+//                img = ScanFillKt.Fill(img,p1.y * img.getWidth() + p1.x,targetColor,c);
+                img = f.floodFill(img,p1.y * img.getWidth() + p1.x,targetColor,c);
+                ((ImageView)findViewById(R.id.imageView1)).setImageBitmap(img);
+                return true;
+            }
+        });
     }
 
     public void toastMe(View view) {
@@ -46,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         Intent activity2 = new Intent(this, Activity2.class);
         startActivity(activity2);
     }
+
 
     public void yeet(View view) {
         Intent activity3 = new Intent(this, Activity3.class);
@@ -78,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
                 g.edge(1);
                 g.fixGaps(15, PointType.WHITE);
                 g.fixGaps(150, PointType.BLACK);
-                image_view.setImageBitmap(g.write());
+                img = g.write();
+                image_view.setImageBitmap(img);
+                img = Bitmap.createScaledBitmap(img, image_view.getWidth(), image_view.getHeight(), false);
                 //bg ll = (bg) findViewById(R.id.bg);
                 //rl.setBackgroundResource(R.drawable.selectedImage);
             } catch (FileNotFoundException e) {

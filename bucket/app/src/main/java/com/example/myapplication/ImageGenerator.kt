@@ -12,11 +12,15 @@ class ImageGenerator {
     var w: Int
     var h: Int
     var colours: Array<Point>
+    var regions: MutableList<Region>
+    var checked: TreeSet<Int>
 
     init {
         w = 0
         h = 0
         colours = Array(0) { Point(-1, 0, 0, 0, PointType.COLOUR) }
+        regions = mutableListOf<Region>()
+        checked = sortedSetOf<Int>()
     }
 
     constructor(img: Bitmap) {
@@ -154,41 +158,54 @@ class ImageGenerator {
 
     fun fixGaps(t: Int, rm: PointType) {
         var id = 0
-        val regions = mutableListOf<Region>()
-        val checked = sortedSetOf<Int>()
+        regions = mutableListOf<Region>()
+        checked = sortedSetOf<Int>()
         colours.indices.forEach {
             if (!(it in checked)) {
                 val r = Region(id, 0, sortedSetOf<Int>(), colours[it].t)
+                id++
+                val s = mutableListOf<Int>()
+                s.add(it)
                 regions.add(r)
-                val queue = PriorityQueue<Int>()
-                queue.add(it)
-                while (queue.size > 0) {
-                    val front = queue.poll()!!
-                    val x = front % w
-                    val y = front / w
-                    if (!(front in checked)) {
-                        if (colours[front].t == r.t) {
-                            checked.add(front)
-                            r.pixels.add(front)
+                while (s.size > 0) {
+                    val p = s.removeAt(s.size - 1)
+                    if (p >= 0 && !(p in checked)) {
+                        val x = p % w
+                        val y = p / w
+                        var j = y
+                        while (j >= 0 && colours[w * j + x].t == r.t) j--
+                        j++
+                        var left = false
+                        var right = false
+                        while (j < h && colours[w * j + x].t == r.t && !((w * j + x) in checked)) {
+                            val index = w * j + x
                             r.size++
-                            ((x - 1)..(x + 1)).forEach { i ->
-                                ((y - 1)..(y + 1)).forEach { j ->
-                                    if (i >= 0 && i < w && j >= 0 && j < h) {
-                                        queue.add(j * w + i)
-                                    }
-                                }
+                            r.pixels.add(index)
+                            checked.add(index)
+                            if (!left && x > 0 && colours[index - 1].t == r.t && !((index - 1) in checked)) {
+                                s.add(index - 1)
+                                left = true
+                            } else if (left && x == 1 && colours[w * j].t != r.t && !((w * j) in checked)) {
+                                left = false
                             }
+
+                            if (!right && x < w - 1 && colours[index + 1].t == r.t && !((index + 1) in checked)) {
+                                s.add(index + 1)
+                                right = true
+                            } else if (right && x < w - 1 && colours[index + 1].t != r.t && !((index + 1) in checked)) {
+                                right = false
+                            }
+                            j++
                         }
                     }
                 }
-                id++
             }
         }
         regions.forEach { r ->
             if (r.size < t) {
                 r.pixels.forEach {
                     colours[it] = when {
-                        r.t == PointType.WHITE && rm == r.t ->Point(it, 0, 0, 0, PointType.BLACK)
+                        r.t == PointType.WHITE && rm == r.t -> Point(it, 0, 0, 0, PointType.BLACK)
                         r.t == PointType.BLACK && rm == r.t -> Point(it, 255, 255, 255, PointType.WHITE)
                         else -> colours[it]
                     }

@@ -15,8 +15,8 @@
 
     <ImageButton
         android:id="@+id/Upload"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="41dp"
@@ -47,15 +47,15 @@
 
     <ImageButton
         android:id="@+id/colour"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="280dp"
         android:layout_marginRight="280dp"
         android:background="@drawable/round"
         android:onClick="toastMe"
-        android:src="@drawable/pallete"
+        android:src="@drawable/paletteeditblack"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,8 +67,8 @@
 
     <ImageButton
         android:id="@+id/Info"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="41dp"
@@ -87,30 +87,34 @@
 
     <ImageButton
         android:id="@+id/Save"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="13dp"
         android:layout_marginEnd="96dp"
-        android:layout_marginRight="96dp"
-        android:background="@drawable/round"
-        android:src="@drawable/save"
-        android:scaleType="fitXY"
         android:adjustViewBounds="true"
+        android:background="@drawable/round"
+        android:scaleType="fitXY"
+        android:src="@drawable/floppyedit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Upload"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.493"
         tools:ignore="RtlCompat" />
 
     <ImageView
         android:id="@+id/imageView1"
+        android:clickable="true"
+
         android:layout_width="321dp"
         android:layout_height="454dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-
         android:src="@drawable/ic_launcher_foreground"
+        android:onClick="handleTouch"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
