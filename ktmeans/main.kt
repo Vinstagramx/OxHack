@@ -194,67 +194,51 @@ class ImageGenerator {
     }
 
     fun fixGaps(t: Int, rm: PointType) {
-        println("t: $t, rm: $rm ssss")
         var id = 0
         regions = mutableListOf<Region>()
         checked = sortedSetOf<Int>()
         colours.indices.forEach {
             if (!(it in checked)) {
-                println(id)
-                val queue = PriorityQueue<Int>()
                 val r = Region(id, 0, sortedSetOf<Int>(), colours[it].t)
-                queue.add(it)
+                id++
+                val s = mutableListOf<Int>()
+                s.add(it)
                 regions.add(r)
-                while (queue.size > 0) {
-                    val q = queue.poll()
-                    if (q >= 0 && !(q in checked)) {
-                        val x = q % w
-                        val y = q / w
-                        arrayListOf(0, 1, -1).forEach { o ->
-                            var i = x
-                            while (i < w && i >= 0 && (y + o) >= 0 && (y + o) < h && colours[w * (y + o) + i].t == r.t) {
-                                when (o) {
-                                    0 -> {
-                                        checked.add(w * y + i)
-                                        r.pixels.add(w * y + i)
-                                    }
-                                    else -> queue.add(w * (y + o) + i)
-                                }
-                                i++
+                while (s.size > 0) {
+                    val p = s.removeAt(s.size - 1)
+                    if (p >= 0 && !(p in checked)) {
+                        val x = p % w
+                        val y = p / w
+                        var j = y
+                        while (j >= 0 && colours[w * j + x].t == r.t) j--
+                        j++
+                        var left = false
+                        var right = false
+                        while (j < h && colours[w * j + x].t == r.t && !((w * j + x) in checked)) {
+                            val index = w * j + x
+                            r.size++
+                            r.pixels.add(index)
+                            checked.add(index)
+                            if (!left && x > 0 && colours[index - 1].t == r.t && !((index - 1) in checked)) {
+                                s.add(index - 1)
+                                left = true
+                            } else if (left && x == 1 && colours[w * j].t != r.t && !((w * j) in checked)) {
+                                left = false
                             }
 
-                            i = x - 1
-                            while (i < w && i >= 0 && (y + o) >= 0 && (y + o) < h && colours[w * (y + o) + i].t == r.t) {
-                                when (o) {
-                                    0 -> {
-                                        checked.add(w * y + i)
-                                        r.pixels.add(w * y + i)
-                                    }
-                                    else -> queue.add(w * (y + o) + i)
-                                }
-                                i--
+                            if (!right && x < w - 1 && colours[index + 1].t == r.t && !((index + 1) in checked)) {
+                                s.add(index + 1)
+                                right = true
+                            } else if (right && x < w - 1 && colours[index + 1].t != r.t && !((index + 1) in checked)) {
+                                right = false
                             }
+                            j++
                         }
                     }
                 }
             }
-            id++
         }
-        // regions.forEach { r ->
-        //     val red = Random.nextInt(0, 256)
-        //     val grn = Random.nextInt(0, 256)
-        //     val blu = Random.nextInt(0, 256)
-        //     if (r.size < 10000)
-        //     {
-        //         println(r.pixels.size)
-        //         r.pixels.forEach {
-        //             println("${r.t}: ${colours[it].t}")
-        //             colours[it] = Point(it, red, grn, blu, PointType.COLOUR)
-        //         }
-        //     }
-        // }
         regions.forEach { r ->
-            // println(r.size)
             if (r.size < t) {
                 r.pixels.forEach {
                     colours[it] = when {
@@ -296,5 +280,5 @@ enum class PointType {
     COLOUR,
     BLACK,
     WHITE,
-    CENTROID
+    CENTROID,
 }
